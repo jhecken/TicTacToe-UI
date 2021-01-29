@@ -30,7 +30,7 @@ stages:
         displayName: 'install project dependencies'
         inputs:
           command: 'install'
-          workingDir: 'TicTacToe-UI'
+          #workingDir: 'TicTacToe-UI'
 #build angular project
       - task: AngularCLI@0
         displayName: 'build angular project'
