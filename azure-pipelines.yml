@@ -23,7 +23,7 @@ stages:
         displayName: 'Install Angular CLI'
         inputs:
           command: 'custom'
-          workingDir: 'TicTacToe-UI'
+          #workingDir: 'TicTacToe-UI'
           customCommand: 'install @angular/cli@latest -g'
 #install angular app dependencies
       - task: Npm@1
