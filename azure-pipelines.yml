@@ -23,14 +23,14 @@ stages:
         displayName: 'Install Angular CLI'
         inputs:
           command: 'custom'
-          #workingDir: 'TicTacToe-UI'
+          workingDir: 'TicTacToe-UI'
           customCommand: 'install @angular/cli@latest -g'
 #install angular app dependencies
       - task: Npm@1
         displayName: 'install project dependencies'
         inputs:
           command: 'install'
-          #workingDir: 'TicTacToe-UI'
+          workingDir: 'TicTacToe-UI'
 
 #build angular project
       - task: AngularCLI@0
@@ -40,7 +40,7 @@ stages:
           project: 'TicTacToe-UI'
           custom: 'build --prod'
           DisableAnalytics: false
-      - publish: $(System.DefaultWorkingDirectory)/dist/TicTacToe-UI
+      - publish: $(System.DefaultWorkingDirectory)TicTacToe-UI/dist/TicTacToe-UI
         artifact: ClientRelease
      
 - stage: DeployClient
