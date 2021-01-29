@@ -1,0 +1,76 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- develop
+
+pool:
+  vmImage: 'windows-latest'
+
+stages:
+- stage: BuildClient
+  jobs:
+    - job: 
+      steps:
+      - task: NodeAndNpmTool@1
+        inputs:
+          versionSpec: '12.x'
+          checkLatest: true
+#install angular cli
+      - task: Npm@1
+        displayName: 'Install Angular CLI'
+        inputs:
+          command: 'custom'
+          workingDir: 'TicTacToe-UI'
+          customCommand: 'install @angular/cli@latest -g'
+#install angular app dependencies
+      - task: Npm@1
+        displayName: 'install project dependencies'
+        inputs:
+          command: 'install'
+          workingDir: 'TicTacToe-UI'
+#build angular project
+      - task: AngularCLI@0
+        displayName: 'build angular project'
+        inputs:
+          command: 'custom'
+          project: 'TicTacToe-UI'
+          custom: 'build --prod'
+          DisableAnalytics: false
+      - publish: $(System.DefaultWorkingDirectory)/TickTacToe-UI/dist/TicTacToe-UI
+        artifact: ClientRelease
+
+- stage: DeployClient
+  jobs:
+  - job: deploy
+    steps:
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        buildType: 'current'
+        artifactName: 'ClientRelease'
+        path: $(Build.SourcesDirectory)/release
+    - task: AzureRmWebAppDeployment@4
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'Azure subscription 1(1)(f4c13e81-6cbe-4949-ab59-f130a8a40d47)'
+        appType: 'webApp'
+        WebAppName: 'Jd-TickTacToe-Ui'
+        packageForLinux: '$(Build.SourcesDirectory)/release'
+        enableCustomDeployment: true
+        DeploymentType: 'webDeploy'
+        TakeAppOfflineFlag: false
+        RemoveAdditionalFilesFlag: true
+
+    # - task: AzureRmWebAppDeployment@4
+    #   inputs:
+    #     ConnectionType: 'AzureRM'
+    #     azureSubscription: 'Free Trial(f4c13e81-6cbe-4949-ab59-f130a8a40d47)'
+    #     appType: 'webApp'
+    #     WebAppName: 'CookingPapaWeb'
+    #     packageForLinux: '$(Build.SourcesDirectory)/release'
+    #     enableCustomDeployment: true
+    #     DeploymentType: 'webDeploy'
+    #     TakeAppOfflineFlag: false
+    #     RemoveAdditionalFilesFlag: true
