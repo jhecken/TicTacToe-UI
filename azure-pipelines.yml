@@ -7,7 +7,7 @@ trigger:
 - develop
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'windows-latest'
 
 stages:
 - stage: BuildClient
@@ -33,22 +33,16 @@ stages:
           #workingDir: 'TicTacToe-UI'
 
 #build angular project
-      - task: AngularCLI@1
+      - task: AngularCLI@0
+        displayName: 'build angular project'
         inputs:
-          command: 'build'
+          command: 'custom'
           project: 'TicTacToe-UI'
+          custom: 'build --prod'
           DisableAnalytics: false
-      # - task: AngularCLI@0
-      #   displayName: 'build angular project'
-      #   inputs:
-      #     command: 'custom'
-      #     project: 'TicTacToe-UI'
-      #     custom: 'build --prod'
-      #     DisableAnalytics: false
       - publish: $(System.DefaultWorkingDirectory)/dist/TicTacToe-UI
         artifact: ClientRelease
      
-
 - stage: DeployClient
   jobs:
   - job: deploy
