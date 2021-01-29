@@ -36,7 +36,7 @@ stages:
         displayName: 'build angular project'
         inputs:
           command: 'custom'
-          #project: 'TicTacToe-UI'
+          project: 'TicTacToe-UI'
           custom: 'build --prod'
           DisableAnalytics: false
       - publish: $(System.DefaultWorkingDirectory)/dist/TicTacToe-UI
