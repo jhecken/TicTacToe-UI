@@ -40,7 +40,7 @@ stages:
           project: 'TicTacToe-UI'
           custom: 'build --prod'
           DisableAnalytics: false
-      - publish: $(System.DefaultWorkingDirectory)TicTacToe-UI/dist/TicTacToe-UI
+      - publish: $(System.DefaultWorkingDirectory)/TicTacToe-UI/dist/TicTacToe-UI
         artifact: ClientRelease
      
 - stage: DeployClient
