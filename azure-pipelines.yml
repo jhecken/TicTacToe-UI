@@ -55,7 +55,7 @@ stages:
     - task: AzureRmWebAppDeployment@4
       inputs:
         ConnectionType: 'AzureRM'
-        azureSubscription: '$(subscription)'
+        azureSubscription: 'Azure subscription 1(f4c13e81-6cbe-4949-ab59-f130a8a40d47)'
         appType: 'webApp'
         WebAppName: 'Jd-TickTacToe-Ui'
         packageForLinux: '$(Build.SourcesDirectory)/release'
