@@ -1,0 +1,10 @@
+{
+  "api": {
+    "games": {
+      "base": "https://localhost:44317/",
+      "uri": {
+        "game": "api/Game"
+      }
+    }
+  }
+}
