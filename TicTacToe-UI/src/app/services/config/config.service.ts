@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Config } from 'src/app/data/config.model';
+import { Observable, of } from 'rxjs';
+import { Config } from '../../data/config.model';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -10,11 +10,24 @@ import { environment } from 'src/environments/environment';
 export class ConfigService {
   private readonly configPath: string;
 
+  config: Config;
+
   constructor(private readonly http: HttpClient) {
     this.configPath = environment.config;
+    this.config = {
+      api: {
+        games: {
+          base: "https://localhost:44317/",
+          uri: {
+           game: "api/Game" 
+          }
+        }
+      }
+    };
   }
 
   get(): Observable<Config> {
-    return this.http.get<Config>(this.configPath);
+    return of(this.config);
+    //return this.http.get<Config>(this.configPath);
   }
 }
