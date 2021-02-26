@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { GameService } from '../services/game.service';
+import { Game } from '../data/game.model';
 
 @Component({
   selector: 'app-board',
@@ -10,31 +12,90 @@ export class BoardComponent implements OnInit {
   xIsNext: boolean = true;
   winner: string | undefined;
 
-  constructor() { 
+  game: Game | null;
+
+  constructor(private readonly gameService: GameService) { 
+    this.game = null;
   }
 
   ngOnInit(): void {
+    
+    console.log("inside ngOnInit()");
     this.newGame();
   }
   newGame() {
+    
+    console.log("start newGame()");
     this.squares = Array(9).fill(null);
     this.winner = undefined;
     this.xIsNext = true;
+
+    // Call the service to get a new game
+    this.gameService.getNewGame(1, 2).subscribe((game) => {
+      
+      console.log("inside service getNewGame() cal");
+      this.game = game;
+
+      console.log(this.game);
+      if(this.game){
+        console.log(`GameId = ${this.game.GameID}`);
+        console.log(`PlayerOneId = ${this.game.PlayerOneID}`);
+        console.log(`PlayerTwoId = ${this.game.PlayerTwoID}`);
+        console.log(`BoardSpaces = ${this.game.BoardSpaces}`);
+        console.log(`WinnerId = ${this.game.WinnerID}`);
+      }
+      
+    });
   }
   get player(){
     return this.xIsNext ? 'X':'O';
   }
 
   makeMove(idx: number){
+    console.log("inside makeMove()");
+
+    console.log(this.game);
+    if(this.game){
+      console.log(`GameId = ${this.game.GameID}`);
+      console.log(`PlayerOneId = ${this.game.PlayerOneID}`);
+      console.log(`PlayerTwoId = ${this.game.PlayerTwoID}`);
+      console.log(`BoardSpaces = ${this.game.BoardSpaces}`);
+      console.log(`WinnerId = ${this.game.WinnerID}`);
+    }
+
     if(this.winner){
       return;
     }
+
+    if(!this.game || this.game.WinnerID){
+      return;
+    }
+
     if(!this.squares[idx]){
       this.squares.splice(idx, 1, this.player);
       this.xIsNext = !this.xIsNext;
 
       this.winner = this.calculateWinner();
     }
+
+    if(!this.game.BoardSpaces[idx]){
+      const playerId = this.xIsNext ? this.game.PlayerOneID:this.game.PlayerTwoID;
+
+      this.gameService.makeMove(this.game.GameID, idx, playerId).subscribe((game) => {
+      console.log("inside makeMove (inside call to service (before the = ))");
+      console.log(this.game);
+        this.game = game;
+      });
+
+      console.log("inside makeMove (after call to service)");
+      console.log(this.game);
+      
+      this.xIsNext = !this.xIsNext;
+      
+      this.winner = this.calculateWinner();
+    }
+
+    console.log("inside service getNewGame() end of function");
     if(!this.xIsNext){
       this.computerMove();
     }
